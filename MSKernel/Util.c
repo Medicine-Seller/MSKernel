@@ -1,46 +1,13 @@
 #include "Util.h"
 #include "Definitions.h"
-#include "Structs.h"
 #include "Logger.h"
 
-UNICODE_STRING ToUnicodeString(LPCSTR string)
-{
-	UNICODE_STRING unicodeString;
-	RtlInitUnicodeString(&unicodeString, NULL);
-
-	ANSI_STRING ansiString;
-	RtlInitAnsiString(&ansiString, string);
-
-	NTSTATUS status = RtlAnsiStringToUnicodeString(&unicodeString, &ansiString, TRUE);
-	if (!NT_SUCCESS(status))
-		return unicodeString;
-	
-	return unicodeString;
-}
-
-PVOID GetSystemRoutineAddress(LPCSTR routineName)
-{
-	UNICODE_STRING unicodeRoutineName = ToUnicodeString(routineName);
-	void* routineAddress = MmGetSystemRoutineAddress(&unicodeRoutineName);
-	RtlFreeUnicodeString(&unicodeRoutineName);
-	return routineAddress;
-}
-
-
-NTSTATUS QuerySystemInformation(SYSTEM_INFORMATION_CLASS systemInformationClass, PVOID systemInformation, ULONG systemInformationLength, ULONG* returnLength)
-{
-	ULONG tempReturnLength;
-	NTSTATUS status = ZwQuerySystemInformation(systemInformationClass, systemInformation, systemInformationLength, &tempReturnLength);
-	if (returnLength != NULL)
-		*returnLength = tempReturnLength;
-
-	return status;
-}
+#define MEM_TAG_UTIL 'UTIL'
 
 NTSTATUS QuerySystem(SYSTEM_INFORMATION_CLASS systemInformationClass, PVOID* systemInformation)
 {
 	if (!systemInformation)
-		return STATUS_INTERNAL_ERROR;
+		return STATUS_UNSUCCESSFUL;
 
 	ULONG bufferSize = 0;
 	PVOID buffer = NULL;
@@ -49,141 +16,67 @@ NTSTATUS QuerySystem(SYSTEM_INFORMATION_CLASS systemInformationClass, PVOID* sys
 	do
 	{
 		if (buffer)
-			ExFreePool(buffer);
+			ExFreePoolWithTag(buffer, MEM_TAG_UTIL);
 
 		bufferSize *= 2;
-		buffer = ExAllocatePoolWithTag(PagedPool, bufferSize, 'kami');
+		buffer = ExAllocatePoolWithTag(PagedPool, bufferSize, MEM_TAG_UTIL);
 
 		if (!buffer)
 			return STATUS_INSUFFICIENT_RESOURCES;
 
 		status = ZwQuerySystemInformation(systemInformationClass, buffer, bufferSize, &bufferSize);
-	} while (status == STATUS_INFO_LENGTH_MISMATCH);
+	} 
+	while (status == STATUS_INFO_LENGTH_MISMATCH);
 
 	if (!NT_SUCCESS(status)) 
 	{
-		ExFreePool(buffer);
+		ExFreePoolWithTag(buffer, MEM_TAG_UTIL);
 		return status;
 	}
-
-	status = QuerySystemInformation(systemInformationClass, buffer, bufferSize, NULL);
 
 	*systemInformation = buffer;
 
 	return status;
 }
 
-
-NTSTATUS QueryHandles()
+NTSTATUS QueryProcessHandles(ULONG processId)
 {
-	PSYSTEM_HANDLE_INFORMATION systemHandleInformationBuffer = NULL;
+	PSYSTEM_HANDLE_INFORMATION handleInformationBuffer = NULL;
 	NTSTATUS status;
 
-	status = QuerySystem(SystemHandleInformation, (PVOID*) & systemHandleInformationBuffer);
-
+	status = QuerySystem(SystemHandleInformation, &handleInformationBuffer);
 	if (!NT_SUCCESS(status))
 		return status;
 
-	if (!systemHandleInformationBuffer)
-		return STATUS_INTERNAL_ERROR;
-
-	for (auto i = 0; i < systemHandleInformationBuffer->NumberOfHandles; i++)
+	for (auto i = 0; i < handleInformationBuffer->NumberOfHandles; i++)
 	{
-		HANDLE handle = (HANDLE)systemHandleInformationBuffer->Handles[i].HandleValue;
+		SYSTEM_HANDLE_TABLE_ENTRY_INFO* handleInfo = &handleInformationBuffer->Handles[i];
 
-		
-		ULONG pid = systemHandleInformationBuffer->Handles[i].UniqueProcessId;
-		if (pid != 4)
+		if (processId != -1 && handleInfo->UniqueProcessId != processId)
 			continue;
 		
-
-		PEPROCESS process;
-		status = PsLookupProcessByProcessId((HANDLE)0x4, &process);
-		if (!NT_SUCCESS(status))
-		{
-			LOG("Process lookup failed!\n");
-			continue;
-		}
-
-		KAPC_STATE apcState;
-		KeStackAttachProcess(process, &apcState);
-
-		PCHAR ProcessName = PsGetProcessImageFileName(IoGetCurrentProcess());
-		LOG("%s : %p : IsKernalHandle(%d)", ProcessName, handle, ObIsKernelHandle(handle));
-		
-
-
-		KeUnstackDetachProcess(&apcState);
-		ObDereferenceObject(process);
-		//LOG("%lx\n", systemHandleInformationBuffer->Handles[i].HandleValue);
+		LOG("PID: %d - %lx\n", handleInfo->UniqueProcessId, handleInfo->HandleValue);
 	}
 	
-	ExFreePool(systemHandleInformationBuffer);
+	ExFreePoolWithTag(handleInformationBuffer, MEM_TAG_UTIL);
 	return STATUS_SUCCESS;
 }
 
-typedef struct _SYSTEM_MODULE_ENTRY
+NTSTATUS QuerySystemModules()
 {
-	HANDLE Section;
-	PVOID MappedBase;
-	PVOID ImageBase;
-	ULONG ImageSize;
-	ULONG Flags;
-	USHORT LoadOrderIndex;
-	USHORT InitOrderIndex;
-	USHORT LoadCount;
-	USHORT OffsetToFileName;
-	UCHAR FullPathName[256];
-} SYSTEM_MODULE_ENTRY, * PSYSTEM_MODULE_ENTRY;
-
-typedef struct _SYSTEM_MODULE_INFORMATION
-{
-	ULONG NumberOfModules;
-	SYSTEM_MODULE_ENTRY Modules[1];
-} SYSTEM_MODULE_INFORMATION, * PSYSTEM_MODULE_INFORMATION;
-
-NTSTATUS QueryModules()
-{
-	PSYSTEM_MODULE_INFORMATION modInfo = 0;
-	QuerySystem(SystemModuleInformation, (PVOID*)&modInfo);
-
-
-	ULONG bufferSize = 0;
-	//PVOID buffer = NULL;
+	PSYSTEM_MODULE_INFORMATION moduleInformationBuffer;
 	NTSTATUS status;
-	do
-	{
-		if (modInfo)
-			ExFreePool(modInfo);
-
-		bufferSize *= 2;
-		modInfo = (PSYSTEM_MODULE_INFORMATION)ExAllocatePoolWithTag(PagedPool, bufferSize, 'kami');
-
-		if (!modInfo)
-			return STATUS_INSUFFICIENT_RESOURCES;
-
-		status = ZwQuerySystemInformation(SystemModuleInformation, modInfo, bufferSize, &bufferSize);
-
-	} while (status == STATUS_INFO_LENGTH_MISMATCH);
-
+	
+	status = QuerySystem(SystemModuleInformation, &moduleInformationBuffer);
 	if (!NT_SUCCESS(status))
-	{
-		ExFreePool(modInfo);
 		return status;
-	}
 
-	for (ULONG i = 0; i < modInfo->NumberOfModules; i++)
+	for (ULONG i = 0; i < moduleInformationBuffer->NumberOfModules; i++)
 	{
-		LOG("ImageBase: %p ImageSize: %llx MappedBase: %p Offset: %p\n", 
-			modInfo->Modules[i].ImageBase,
-			modInfo->Modules[i].ImageSize,
-			modInfo->Modules[i].MappedBase,
-			modInfo->Modules[i].OffsetToFileName
-			);
-		LOG("FullPathName: %s\n", modInfo->Modules[i].FullPathName);
+		SYSTEM_MODULE_ENTRY* module = &moduleInformationBuffer->Modules[i];
+		LOG("ImageBase: %p - %s\n", module->ImageBase, module->FullPathName);
 	}
 
-	ExFreePool(modInfo);
-
+	ExFreePoolWithTag(moduleInformationBuffer, MEM_TAG_UTIL);
 	return STATUS_SUCCESS;
 }

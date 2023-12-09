@@ -34,8 +34,6 @@ bool IsServiceExists(System::String^ serviceName) {
     return output->Contains("SERVICE_NAME: " + serviceName);
 }
 
-#include <Windows.h>
-
 void CreateDriverService(System::String^ serviceName, System::String^ driverPath) {
     System::Diagnostics::ProcessStartInfo^ startInfo = gcnew System::Diagnostics::ProcessStartInfo();
     startInfo->FileName = "sc.exe";

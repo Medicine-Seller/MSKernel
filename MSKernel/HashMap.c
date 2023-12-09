@@ -1,6 +1,6 @@
 #include "HashMap.h"
 
-#define MEM_TAG 'HASH'
+#define MEM_TAG_UTIL 'HASH'
 
 ULONGLONG Hash(VOID* key)
 {
@@ -9,7 +9,7 @@ ULONGLONG Hash(VOID* key)
 
 struct KeyValuePair* CreateKeyValuePair(void* key, void* value)
 {
-	struct KeyValuePair* newPair = ExAllocatePoolWithTag(NonPagedPool, sizeof(struct KeyValuePair), MEM_TAG);
+	struct KeyValuePair* newPair = ExAllocatePoolWithTag(NonPagedPool, sizeof(struct KeyValuePair), MEM_TAG_UTIL);
 
 	if (newPair != NULL)
 	{
@@ -79,7 +79,7 @@ NTSTATUS HashMap_Erase(struct HashMap* hashTable, void* key)
 			else
 				previous->Next = current->Next;
 
-			ExFreePoolWithTag(current, MEM_TAG);
+			ExFreePoolWithTag(current, MEM_TAG_UTIL);
 			return STATUS_SUCCESS;
 		}
 
@@ -100,7 +100,7 @@ VOID HashMap_Clear(struct HashMap* hashTable)
 		{
 			struct KeyValuePair* temp = current;
 			current = current->Next;
-			ExFreePoolWithTag(temp, MEM_TAG);
+			ExFreePoolWithTag(temp, MEM_TAG_UTIL);
 		}
 		hashTable->Table[i] = NULL;
 	}

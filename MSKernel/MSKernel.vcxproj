@@ -145,7 +145,7 @@
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Modification.h" />
     <ClInclude Include="ObRegisterCallbacks.h" />
-    <ClInclude Include="Structs.h" />
+    <ClInclude Include="Definitions_Struct.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

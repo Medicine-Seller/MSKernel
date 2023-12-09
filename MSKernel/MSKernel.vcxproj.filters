@@ -36,12 +36,6 @@
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Memory.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Definitions.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Modification.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,21 +51,15 @@
     <ClCompile Include="IOCTL.c">
       <Filter>Source Files\Base</Filter>
     </ClCompile>
+    <ClCompile Include="Definitions.c">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory.c">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Definitions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Modification.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObRegisterCallbacks.h">
@@ -86,8 +74,20 @@
     <ClInclude Include="IOCTL.h">
       <Filter>Header Files\Base</Filter>
     </ClInclude>
+    <ClInclude Include="Definitions.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions_Struct.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
     <ClInclude Include="IOCTL_Definitions.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>Header Files\Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

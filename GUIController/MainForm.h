@@ -140,7 +140,7 @@ namespace GUIController {
 			this->checkedListBox1->FormattingEnabled = true;
 			this->checkedListBox1->Location = System::Drawing::Point(227, 25);
 			this->checkedListBox1->Name = L"checkedListBox1";
-			this->checkedListBox1->Size = System::Drawing::Size(225, 214);
+			this->checkedListBox1->Size = System::Drawing::Size(225, 199);
 			this->checkedListBox1->TabIndex = 8;
 			this->checkedListBox1->ItemCheck += gcnew System::Windows::Forms::ItemCheckEventHandler(this, &MainForm::checkedListBox1_ItemCheck);
 			// 
@@ -184,13 +184,14 @@ namespace GUIController {
 		}
 
 		MSKernel.SetDriver("\\\\.\\" DRIVER);
+
 		MSKernel.Initialize();
+
 		if (MSKernel.IsDriverValid())
 			richTextBox1->AppendText(DRIVER + " initialized!\n");
 		else
 			richTextBox1->AppendText(DRIVER + " is not initialized!\n");
 			
-
 		checkedListBox1->Items->AddRange(AccessMask::Instance()->GetAccessRights()->ToArray());
 	}
 	private: System::Void MainForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {

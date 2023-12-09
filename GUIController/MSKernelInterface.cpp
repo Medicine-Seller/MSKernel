@@ -1,6 +1,5 @@
 #include "MSKernelInterface.hpp"
 
-
 MSKernelInterface::~MSKernelInterface()
 {
 	if (!IsDriverValid())
@@ -8,7 +7,6 @@ MSKernelInterface::~MSKernelInterface()
 
 	CloseHandle(Driver);
 }
-
 
 BOOL MSKernelInterface::IsDriverValid()
 {
@@ -55,3 +53,4 @@ BOOL MSKernelInterface::Close()
 {
 	return CloseHandle(Driver);
 }
+

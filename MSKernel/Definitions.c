@@ -2,16 +2,16 @@
 #include "Util.h"
 #include "Logger.h"
 
-pfnPsGetProcessImageFileName PsGetProcessImageFileName;
-pfnZwQuerySystemInformation ZwQuerySystemInformation;
+PsGetProcessImageFileName_t PsGetProcessImageFileName;
+ZwQuerySystemInformation_t ZwQuerySystemInformation;
 
 struct Definition
 {
-	void** function;
-	const char* functionName;
+	PVOID* Function;
+	UNICODE_STRING FunctionName;
 };
 
-#define P_F(x) {(void**)(&x), #x}
+#define P_F(x) {&x, RTL_CONSTANT_STRING(L#x)}
 struct Definition UndocumentedFunctionList[] =
 {
 	P_F(PsGetProcessImageFileName),
@@ -19,23 +19,18 @@ struct Definition UndocumentedFunctionList[] =
 };
 #undef P_F
 
+const int UndocumentedFunctionSize = sizeof(UndocumentedFunctionList) / sizeof(UndocumentedFunctionList[0]);
+
 BOOLEAN InitializeDefinitions()
 {
-	const int size = sizeof(UndocumentedFunctionList) / sizeof(UndocumentedFunctionList[0]);
-	LOGF("Size = %d", size);
-
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < UndocumentedFunctionSize; i++)
 	{
 		struct Definition* d = &UndocumentedFunctionList[i];
 
-		if (d->function == NULL)
-		{
-			LOGF("Failed to initialize definition: %s = %p\n", d->functionName, d->function);
+		*d->Function = MmGetSystemRoutineAddress(&d->FunctionName);
+		
+		if (*d->Function == NULL)
 			return FALSE;
-		}
-
-		*d->function = GetSystemRoutineAddress(d->functionName);
-		LOGF("%s = %p", d->functionName, *d->function);
 	}
 
 	return TRUE;

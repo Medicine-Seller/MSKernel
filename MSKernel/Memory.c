@@ -1,7 +1,6 @@
 #include "Memory.h"
 #include "Definitions.h"
 #include "Util.h"
-#include "Structs.h"
 #include "Logger.h"
 
 NTSTATUS WriteReadOnlyMemory(PVOID address, PVOID buffer, ULONG size)
@@ -17,7 +16,7 @@ NTSTATUS WriteReadOnlyMemory(PVOID address, PVOID buffer, ULONG size)
 	{
 		MmUnlockPages(mdl);
 		IoFreeMdl(mdl);
-		return STATUS_INTERNAL_ERROR;
+		return STATUS_UNSUCCESSFUL;
 	}
 
 	NTSTATUS status = MmProtectMdlSystemAddress(mdl, PAGE_READWRITE);

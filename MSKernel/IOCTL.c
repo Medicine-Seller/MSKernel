@@ -1,7 +1,7 @@
 #include "IOCTL.h"
 #include "Logger.h"
 
-#define MEM_TAG 'IOIO'
+#define MEM_TAG_UTIL 'IOIO'
 
 struct HashMap IOCTL_ControlCodeMap;
 BOOLEAN IOCTL_Enabled = FALSE;
@@ -109,7 +109,7 @@ NTSTATUS IOCTL_Dismantle(PDRIVER_OBJECT driverObject)
 NTSTATUS IOCTL_AddControl(ULONG controlCode, void* function)
 {
 	if (!IOCTL_Enabled)
-		return STATUS_INTERNAL_ERROR;
+		return STATUS_UNSUCCESSFUL;
 
 	return HashMap_Insert(&IOCTL_ControlCodeMap, controlCode, function);
 }
@@ -117,7 +117,7 @@ NTSTATUS IOCTL_AddControl(ULONG controlCode, void* function)
 NTSTATUS IOCTL_RemoveControl(ULONG controlCode)
 {
 	if (!IOCTL_Enabled)
-		return STATUS_INTERNAL_ERROR;
+		return STATUS_UNSUCCESSFUL;
 
 	return HashMap_Erase(&IOCTL_ControlCodeMap, controlCode);
 }
