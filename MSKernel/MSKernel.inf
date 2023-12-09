@@ -1,0 +1,77 @@
+;
+; MSKernel.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System ; TODO: specify appropriate Class
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318} ; TODO: specify appropriate ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=MSKernel.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+MSKernel_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+MSKernel.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%MSKernel.DeviceDesc%=MSKernel_Device, Root\MSKernel ; TODO: edit hw-id
+
+[MSKernel_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+MSKernel.sys
+
+;-------------- Service installation
+[MSKernel_Device.NT.Services]
+AddService = MSKernel,%SPSVCINST_ASSOCSERVICE%, MSKernel_Service_Inst
+
+; -------------- MSKernel driver install sections
+[MSKernel_Service_Inst]
+DisplayName    = %MSKernel.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\MSKernel.sys
+
+;
+;--- MSKernel_Device Coinstaller installation ------
+;
+
+[MSKernel_Device.NT.CoInstallers]
+AddReg=MSKernel_Device_CoInstaller_AddReg
+CopyFiles=MSKernel_Device_CoInstaller_CopyFiles
+
+[MSKernel_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[MSKernel_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[MSKernel_Device.NT.Wdf]
+KmdfService =  MSKernel, MSKernel_wdfsect
+[MSKernel_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+DiskName = "MSKernel Installation Disk"
+MSKernel.DeviceDesc = "MSKernel Device"
+MSKernel.SVCDESC = "MSKernel Service"
