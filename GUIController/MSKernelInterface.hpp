@@ -5,7 +5,6 @@
 class MSKernelInterface
 {
 public:
-	//MSKernelInterface(LPCSTR registryPath);
 	~MSKernelInterface();
 	BOOL SetPID(ULONG pid);
 	BOOL SetAccessMask(DWORD accessMask);

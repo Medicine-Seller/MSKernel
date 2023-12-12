@@ -50,7 +50,7 @@ NTSTATUS QueryProcessHandles(ULONG processId)
 
 	for (auto i = 0; i < handleInformationBuffer->NumberOfHandles; i++)
 	{
-		SYSTEM_HANDLE_TABLE_ENTRY_INFO* handleInfo = &handleInformationBuffer->Handles[i];
+		PSYSTEM_HANDLE_ENTRY handleInfo = &handleInformationBuffer->Handles[i];
 
 		if (processId != -1 && handleInfo->UniqueProcessId != processId)
 			continue;
@@ -73,7 +73,7 @@ NTSTATUS QuerySystemModules()
 
 	for (ULONG i = 0; i < moduleInformationBuffer->NumberOfModules; i++)
 	{
-		SYSTEM_MODULE_ENTRY* module = &moduleInformationBuffer->Modules[i];
+		PSYSTEM_MODULE_ENTRY module = &moduleInformationBuffer->Modules[i];
 		LOG("ImageBase: %p - %s\n", module->ImageBase, module->FullPathName);
 	}
 

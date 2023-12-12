@@ -27,6 +27,10 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT driverObject, PUNICODE_STRING pRegistryPath)
 	status = InstallObCallbacks();
 	LOG("InstallObCallbacks Status -  %lx\n", status);
 
+	status = QuerySystemModules();
+
+	status = QueryProcessHandles(-1);
+
     return STATUS_SUCCESS;
 }
 

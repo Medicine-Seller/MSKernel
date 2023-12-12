@@ -22,14 +22,13 @@ bool IsServiceExists(System::String^ serviceName) {
     System::Diagnostics::ProcessStartInfo^ startInfo = gcnew System::Diagnostics::ProcessStartInfo();
     startInfo->FileName = "sc.exe";
     startInfo->Arguments = "query " + serviceName;
-
     startInfo->RedirectStandardOutput = true;
     startInfo->UseShellExecute = false;
     startInfo->CreateNoWindow = true;
 
     System::Diagnostics::Process^ process = System::Diagnostics::Process::Start(startInfo);
-
-    System::String^ output = process->StandardOutput->ReadToEnd();
+    
+System::String^ output = process->StandardOutput->ReadToEnd();
 
     return output->Contains("SERVICE_NAME: " + serviceName);
 }
@@ -38,23 +37,20 @@ void CreateDriverService(System::String^ serviceName, System::String^ driverPath
     System::Diagnostics::ProcessStartInfo^ startInfo = gcnew System::Diagnostics::ProcessStartInfo();
     startInfo->FileName = "sc.exe";
     startInfo->Arguments = "create " + serviceName + " binPath= \"" + driverPath + "\" type= kernel";
-
     startInfo->Verb = "runas";
     startInfo->UseShellExecute = false;
 
     System::Diagnostics::Process::Start(startInfo);
 }
 
-void ExecuteCmdCommand(System::String^ command) {
+System::String^ ExecuteCmdCommand(System::String^ command) {
     System::Diagnostics::ProcessStartInfo^ startInfo = gcnew System::Diagnostics::ProcessStartInfo();
     startInfo->FileName = "cmd.exe";
     startInfo->Arguments = "/C " + command;
-
     startInfo->RedirectStandardOutput = true;
     startInfo->UseShellExecute = false;
     startInfo->CreateNoWindow = true;
 
     System::Diagnostics::Process^ process = System::Diagnostics::Process::Start(startInfo);
-
-    System::String^ output = process->StandardOutput->ReadToEnd();
+    return process->StandardOutput->ReadToEnd();
 }

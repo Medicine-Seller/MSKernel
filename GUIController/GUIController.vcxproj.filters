@@ -13,33 +13,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\C++/CLR">
+      <UniqueIdentifier>{e5c7746c-7e87-4884-9cb1-d81cc896b64f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\C++">
+      <UniqueIdentifier>{158f8c8d-f533-4d52-8f6b-9d4b9d16c0d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\C++">
+      <UniqueIdentifier>{e2c3c7b9-a7df-4d29-828c-c41d1c897b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\C++/CLR">
+      <UniqueIdentifier>{d40a8553-144c-4e49-8e23-3fc7301d36a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MainForm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MSKernelInterface.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\C++</Filter>
     </ClCompile>
     <ClCompile Include="Util.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\C++/CLR</Filter>
+    </ClCompile>
+    <ClCompile Include="MainForm.cpp">
+      <Filter>Source Files\C++/CLR</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MSKernelInterface.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Util.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="AccessMask.hpp">
+      <Filter>Header Files\C++/CLR</Filter>
     </ClInclude>
     <ClInclude Include="ProcessEntryWrapper.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\C++/CLR</Filter>
     </ClInclude>
-    <ClInclude Include="AccessMask.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Util.hpp">
+      <Filter>Header Files\C++/CLR</Filter>
+    </ClInclude>
+    <ClInclude Include="MSKernelInterface.hpp">
+      <Filter>Header Files\C++</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

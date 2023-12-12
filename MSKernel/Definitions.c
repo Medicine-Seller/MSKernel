@@ -2,9 +2,6 @@
 #include "Util.h"
 #include "Logger.h"
 
-PsGetProcessImageFileName_t PsGetProcessImageFileName;
-ZwQuerySystemInformation_t ZwQuerySystemInformation;
-
 struct Definition
 {
 	PVOID* Function;

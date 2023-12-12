@@ -185,9 +185,7 @@ namespace GUIController {
 
 		MSKernel.SetDriver("\\\\.\\" DRIVER);
 
-		MSKernel.Initialize();
-
-		if (MSKernel.IsDriverValid())
+		if (MSKernel.Initialize())
 			richTextBox1->AppendText(DRIVER + " initialized!\n");
 		else
 			richTextBox1->AppendText(DRIVER + " is not initialized!\n");
@@ -213,7 +211,7 @@ namespace GUIController {
 		richTextBox1->AppendText(DRIVER + ".SetAccessMask result: " + (result ? "Success" : "Failed") + "\n");
 
 		ProcessEntryWrapper^ process = safe_cast<ProcessEntryWrapper^>(comboBox1->SelectedItem);
-		result = MSKernel.SetPID(process->th32ProcessID);
+		result = MSKernel.SetPID(process->GetProcessId());
 		richTextBox1->AppendText(DRIVER + ".SetPID result: " + (result ? "Success" : "Failed") + "\n");
 	}
 
@@ -225,7 +223,7 @@ namespace GUIController {
 		}
 
 		ProcessEntryWrapper^ process = safe_cast<ProcessEntryWrapper^>(comboBox1->SelectedItem);
-		label2->Text = "PID: " + process->th32ProcessID;
+		label2->Text = "PID: " + process->GetProcessId();
 	}
 
 	private: System::Void checkedListBox1_ItemCheck(System::Object^ sender, System::Windows::Forms::ItemCheckEventArgs^ e) {
