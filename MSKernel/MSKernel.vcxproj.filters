@@ -80,14 +80,14 @@
     <ClInclude Include="Definitions_Struct.h">
       <Filter>Header Files\Base</Filter>
     </ClInclude>
-    <ClInclude Include="IOCTL_Definitions.h">
-      <Filter>Header Files\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>Header Files\Base</Filter>
     </ClInclude>
     <ClInclude Include="Memory.h">
       <Filter>Header Files\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="IOCTL_ControlCodes.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include <iostream>
-#include "../MSKernel/IOCTL_Definitions.h"
+#include "../MSKernel/IOCTL_ControlCodes.h"
 
 class MSKernelInterface
 {

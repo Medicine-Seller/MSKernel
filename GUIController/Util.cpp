@@ -27,9 +27,7 @@ bool IsServiceExists(System::String^ serviceName) {
     startInfo->CreateNoWindow = true;
 
     System::Diagnostics::Process^ process = System::Diagnostics::Process::Start(startInfo);
-    
-System::String^ output = process->StandardOutput->ReadToEnd();
-
+    System::String^ output = process->StandardOutput->ReadToEnd();
     return output->Contains("SERVICE_NAME: " + serviceName);
 }
 

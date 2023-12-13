@@ -140,7 +140,7 @@
     <ClInclude Include="HashMap.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="IOCTL.h" />
-    <ClInclude Include="IOCTL_Definitions.h" />
+    <ClInclude Include="IOCTL_ControlCodes.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Modification.h" />

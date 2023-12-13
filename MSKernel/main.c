@@ -27,21 +27,16 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT driverObject, PUNICODE_STRING pRegistryPath)
 	status = InstallObCallbacks();
 	LOG("InstallObCallbacks Status -  %lx\n", status);
 
-	status = QuerySystemModules();
-
-	status = QueryProcessHandles(-1);
-
     return STATUS_SUCCESS;
 }
 
 NTSTATUS UnloadDriver(PDRIVER_OBJECT driverObject)
 {
-	/*
 	NTSTATUS status = IOCTL_Dismantle(driverObject);
 	LOG("IOCTL_Dismantle status - %lx\n", status);
 
 	UninstallObCallbacks();
-	*/
+	
 	LOG("Unloaded!\n");
     return STATUS_SUCCESS;
 }

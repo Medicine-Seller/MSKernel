@@ -1,8 +1,7 @@
 #include "Modification.h"
-#include "Definitions.h"
 #include "Logger.h"
 #include "IOCTL.h"
-#include "IOCTL_Definitions.h"
+#include "IOCTL_ControlCodes.h"
 
 ULONG PID = NULL;
 ACCESS_MASK AccessMask = NULL;

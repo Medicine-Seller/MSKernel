@@ -171,11 +171,12 @@ namespace GUIController {
 #pragma endregion
 	private: System::Void MainForm_Load(System::Object^ sender, System::EventArgs^ e) {
 		if (!IsServiceExists(DRIVER)) {
-			richTextBox1->AppendText(DRIVER + " service can not be found, creating service...\n");
+			richTextBox1->AppendText(DRIVER + " service not found, creating service...\n");
 			String^ programDirectory = System::IO::Path::GetDirectoryName(System::Reflection::Assembly::GetEntryAssembly()->Location);
 			String^ driverPath = System::IO::Path::Combine(programDirectory, DRIVER + ".sys");
-			richTextBox1->AppendText("Driver Directory: " + driverPath + "\n");
+			//richTextBox1->AppendText("Driver Directory: " + driverPath + "\n");
 			CreateDriverService(DRIVER, driverPath);
+			System::Threading::Thread::Sleep(250);
 		}
 
 		if (IsServiceExists(DRIVER)) {
@@ -184,6 +185,7 @@ namespace GUIController {
 		}
 
 		MSKernel.SetDriver("\\\\.\\" DRIVER);
+
 
 		if (MSKernel.Initialize())
 			richTextBox1->AppendText(DRIVER + " initialized!\n");
